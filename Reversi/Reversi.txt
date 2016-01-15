@@ -1,0 +1,98 @@
+Cameron Anderson
+Project Report
+
+Domain
+	Reversi is played on an 8x8 grid. To start the game, two black and two white pieces are placed at the center
+	of the board diagonal to each other: 
+
+			  A   B   C   D   E   F   G   H 
+		    ---------------------------------
+		0   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+		1   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+		2   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+		3   |   |   |   | ● | ○ |   |   |   |
+		    ---------------------------------
+		4   |   |   |   | ○ | ● |   |   |   |
+		    ---------------------------------
+		5   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+		6   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+		7   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+
+	Black plays first and each player alternates.  A piece can only be played where it can capture at least one
+	of the other player's pieces. Pieces are captured when they are surrounded by the opposite color. If black were
+	to play in square E2 the board would look like:
+
+		      A   B   C   D   E   F   G   H 
+		    ---------------------------------
+		0   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+		1   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+		2   |   |   |   |   | ● |   |   |   |
+		    ---------------------------------
+		3   |   |   |   | ● | ● |   |   |   |
+		    ---------------------------------
+		4   |   |   |   | ○ | ● |   |   |   |
+		    ---------------------------------
+		5   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+		6   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+		7   |   |   |   |   |   |   |   |   |
+		    ---------------------------------
+
+	The game is over when neither player has any legal moves. Usually when the board is completely filled. The
+	player who has the most pieces is the winner.
+
+PEAS
+	Performance Measure: The AI should be able to play at an amateur level.
+
+	Environment: The game board, represented by a 2D array. It is fully observable at all times.
+
+	Actuators: Returns array indices to place pieces.
+
+	Sensors: Ai receives the board and its possible moves.
+
+Solution/Results
+	The AI uses minimax search with alpha-beta filtering.  I was able to run it for two moves per player and get a
+	result with little to no delay. To evaluate the game states, I started by having the AI try to maximize the
+	number of pieces it had throughout the game. This was very ineffective as it easily allowed its opposition to
+	take valuable spots on the board such as corners. To improve game state evaluation, I implemented a Static
+	Score Table. Each square is assigned a value based how good it is to occupy that square. I got the numbers
+	from the University of Washington paper Othellus. The table looks like:
+
+			 [ 100, -10,  11,   6,   6,  11, -10, 100]
+			 [ -10, -20,   1,   2,   2,   1, -20, -10]
+			 [  10,   1,   5,   4,   4,   5,   1,  10]
+			 [   6,   2,   4,   2,   2,   4,   2,   6]
+			 [   6,   2,   4,   2,   2,   4,   2,   6]
+			 [  10,   1,   5,   4,   4,   5,   1,  10]
+			 [ -10, -20,   1,   2,   2,   1, -20, -10]
+			 [ 100, -10,  11,   6,   6,  11, -10, 100]
+
+	To evaluate the game state. The AI sums together the values of each square that it occupies. This solution
+	proved to be more challenging but still beatable.
+
+	The best reversi AIs use dynamic scoring functions. These functions vary based on how many pieces have
+	been played and provide a better score for each game state. Multiple Probability Cut (MPC) is used to improve
+	the performance of these systems. MPC searches each move to a smaller depth, which takes an insignificant
+	amount of time compared to the complete depth, and then decides if it should continue the search to the
+	complete depth. This function is built in to the minimax/alpha-beta algorithm so it is called for every move
+	in the sequence, not just the first move. This forward cutting procedure saves processing time by not wasting
+	time on moves that are leading to bad game states. Good moves for the beginning of games are saved in Opening
+	Books. These allow the AI to quickly make moves based on the game state without having to do minimax search.
+	These topics are covered in many papers by Michael Buro. 
+
+User Instructions
+	To play the game, open a command line interface and change the working directory to the directory where 
+	Reversi.py is saved. Then run 'python reversi.py'. The user will play as the black pieces and the AI will play
+	as the white pieces. Instructions for how to play will appear at the beginning of the game. The depth of
+	minimax search can be easily changed by changing the value of the global variable depth at the top of 
+	reversi.py.
+
