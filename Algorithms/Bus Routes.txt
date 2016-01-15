@@ -1,0 +1,3 @@
+This was a project for Advanced Algorithms that was taken from a coding challenge on Code Eval. The challenge was to find the fastest way to your destination using the bus system. The program would take an input that gave where you started, where your needed to go, and the route network. It took the bus 7 minutes to go from one stop to the next and it took 12 minutes to change buses. My solution was done in Python and was a variation on the shortest path algorithm. Instead I used a priority queue and calculated the route cost and used that as its priority.
+
+Further information on the Challenge can be fournd at https://www.codeeval.com/browse/134/
